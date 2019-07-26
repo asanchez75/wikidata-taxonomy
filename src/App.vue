@@ -3,8 +3,8 @@
     <b-navbar toggleable="md" type="light" variant="light">
       <b-navbar-nav>
         <b-nav-form @submit.prevent="submit">
-          <b-form-input size="sm" class="mr-sm-2" type="text" name="id" v-model="id" placeholder="Root Item"/>
-          <b-form-select v-model="items" :options="items" @input="getSelectedItem"></b-form-select>
+          <!--b-form-input size="sm" class="mr-sm-2" type="text" name="id" v-model="id" placeholder="Root Item"/-->
+          <b-form-select v-model="id" :options="items" @input="getSelectedItem"></b-form-select>
         </b-nav-form>
       </b-navbar-nav>
 
@@ -89,6 +89,7 @@ export default {
   },
   data () {
     return {
+      selected: null,
       instances: '',
       instanceOptions: [
         { value: '', text: 'no instances' },
@@ -100,12 +101,12 @@ export default {
   created: function () { 
     this.id = this.$route.query.id
     this.instances = this.$route.query.instances || ''
-    this.query()
     this.items = [
           { value: null, text: 'Please select an option' },
           { text: 'planet', value: 'Q17362350' },
           { text: 'publication', value: 'Q732577' },
         ]
+    this.query()
   },
   watch: {
     instances: function() {
@@ -113,9 +114,8 @@ export default {
     }
   },
   methods: {
-    getSelectedItem: function(myarg) {
-      var query = {id: myarg}
-      console.log(query);
+    getSelectedItem: function() {
+      var query = {id: this.selected}
       if (this.instances !== '') query.instances = this.instances
       this.$router.push({query})
       this.query()
@@ -127,6 +127,7 @@ export default {
       this.query()
     },
     query: function () {
+     console.log(this);
       const vm = this
       const { id, instances } = vm
       if (id === undefined || id === '') {
