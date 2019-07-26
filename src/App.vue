@@ -4,6 +4,7 @@
       <b-navbar-nav>
         <b-nav-form @submit.prevent="submit">
           <b-form-input size="sm" class="mr-sm-2" type="text" name="id" v-model="id" placeholder="Root Item"/>
+          <b-form-select v-model="items" :options="items" @input="getSelectedItem"></b-form-select>
         </b-nav-form>
       </b-navbar-nav>
 
@@ -100,6 +101,11 @@ export default {
     this.id = this.$route.query.id
     this.instances = this.$route.query.instances || ''
     this.query()
+    this.items = [
+          { value: null, text: 'Please select an option' },
+          { text: 'planet', value: 'Q17362350' },
+          { text: 'publication', value: 'Q732577' },
+        ]
   },
   watch: {
     instances: function() {
@@ -107,6 +113,13 @@ export default {
     }
   },
   methods: {
+    getSelectedItem: function(myarg) {
+      var query = {id: myarg}
+      console.log(query);
+      if (this.instances !== '') query.instances = this.instances
+      this.$router.push({query})
+      this.query()
+    },
     submit: function () {
       var query = {id: this.id}
       if (this.instances !== '') query.instances = this.instances
