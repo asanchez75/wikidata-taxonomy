@@ -2,6 +2,7 @@ const path = require('path')
 const webpack = require('webpack')
 
 module.exports = {
+  node: {child_process: 'empty'},
   entry: './src/main.js',
   output: {
     filename: 'bundle.js',
