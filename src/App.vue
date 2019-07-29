@@ -103,26 +103,14 @@ export default {
   created: function () { 
     this.id = this.$route.query.id
     this.instances = this.$route.query.instances || ''
-    //this.items = [
-    //      { value: null, text: 'Please select an option' },
-    //      { text: 'planet', value: 'Q17362350' },
-    //      { text: 'publication', value: 'Q732577' },
-    //    ]
-    //this.sparql().then(output => {this.output = output.results.bindings})
-    this.items = this.sparql().then(items => {
-      var terms = []; 
-      var index; 
-      var bindings = items.results.bindings; 
-      console.log(bindings);
-      for (index = 0; index < bindings.length; ++index) 
-      { 
-       terms.push( {'text': bindings[index].text.value , 'value': bindings[index].value.value.replace("http://www.wikidata.org/entity/", "") }); 
-      }; 
-      resolve(terms); 
-      }
-      )
-    this.query()
-    console.log(this.items)
+    this.items = [
+          { value: null, text: 'Please select an option' },
+          { text: 'planet', value: 'Q17362350' },
+          { text: 'publication', value: 'Q732577' },
+        ]
+    //this.sparql().then(output => {this.$set('items', output)});
+    this.query();
+    console.log(this);
   },
   watch: {
     instances: function() {
@@ -138,7 +126,19 @@ export default {
                         filter (lang(?text) = 'en')
                        } limit 10`
        const url = wdk.sparqlQuery(sparql)
-       const response = fetch(url).then(response => response.json())
+       const response = fetch(url).then(response => response.json()).then(
+response => {
+      var terms = []; 
+      var index; 
+      var bindings = response.results.bindings; 
+      console.log(bindings);
+      for (index = 0; index < bindings.length; ++index) 
+      { 
+       terms.push( {'text': bindings[index].text.value , 'value': bindings[index].value.value.replace("http://www.wikidata.org/entity/", "") }); 
+      } 
+return terms;
+}
+       );
        resolve(response)
      });
     },
