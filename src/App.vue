@@ -93,6 +93,7 @@ export default {
     return {
       selected: null,
       instances: '',
+      items: '',
       instanceOptions: [
         { value: '', text: 'no instances' },
         //{ value: 'count', text: 'count instances' },
@@ -103,13 +104,14 @@ export default {
   created: function () { 
     this.id = this.$route.query.id
     this.instances = this.$route.query.instances || ''
-    this.items = [
-          { value: null, text: 'Please select an option' },
-          { text: 'planet', value: 'Q17362350' },
-          { text: 'publication', value: 'Q732577' },
-        ]
+//    this.items = [
+//          { value: null, text: 'Please select an option' },
+//          { text: 'planet', value: 'Q17362350' },
+//          { text: 'publication', value: 'Q732577' },
+//        ]
     //this.sparql().then(output => {this.$set('items', output)});
     this.query();
+    this.anotherMethod();
     console.log(this);
   },
   watch: {
@@ -142,6 +144,11 @@ return terms;
        resolve(response)
      });
     },
+      anotherMethod() {
+        this.sparql().then((data) => {
+            this.items = data;
+        });
+      },
     getSelectedItem: function() {
       var query = {id: this.selected}
       if (this.instances !== '') query.instances = this.instances
